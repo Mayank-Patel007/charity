@@ -22,10 +22,10 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "build")));
 
 app.use(express.json());
-// app.use(cors({
-//     origin: ["http://localhost:3001"],
-//     credentials: true,
-// }));
+app.use(cors({
+    origin: ["https://charity-9.onrender.com", "http://localhost:3001"],
+    credentials: true,
+}));
 app.use(cookieParser());
 app.use('/agent', AgentRouter);
 app.use('/donor', DonorRouter);
@@ -38,7 +38,10 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-mongoose.connect("mongodb://127.0.0.1:27017/charity");
+mongoose.connect("mongodb://127.0.0.1:27017/charity", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
 app.listen(process.env.PORT, () => {
     console.log("server is running");
