@@ -1,5 +1,5 @@
 import express from "express";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 const router = express.Router();
 import { Agent } from "../models/Agent.js";
 import jwt from 'jsonwebtoken';
@@ -12,7 +12,7 @@ router.post('/agentsignup', async (req, res) => {
     if (agent) {
       return res.json({ message: 'Agent already exists' });
     }
-    const hashpassword = await bcrypt.hash(password, 10);
+    const hashpassword = await bcryptjs.hash(password, 10);
     const newAgent = await Agent.create({
       firstName, lastName, contactNo, email, username, address, area, city, pincode, password: hashpassword
     });
@@ -30,7 +30,7 @@ router.post('/agentlogin', async (req, res) => {
     if (!agent) {
       return res.status(401).json({ error: "Agent is not registered" });
     }
-    const validPassword = await bcrypt.compare(password, agent.password);
+    const validPassword = await bcryptjs.compare(password, agent.password);
     if (!validPassword) {
       return res.status(401).json({ error: "Password is incorrect" });
     }

@@ -1,5 +1,5 @@
 import express from "express";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 const router = express.Router();
 import { Admin } from "../models/Admin.js";
 import { Donation } from "../models/Donation.js";
@@ -13,7 +13,7 @@ router.post('/adminsignup', async (req, res) => {
     if (admin) {
         return res.json({ message: 'Admin already exists' });
     }
-    const hashpassword = await bcrypt.hash(password, 10);
+    const hashpassword = await bcryptjs.hash(password, 10);
     const newAdmin = await Admin.create({
         email, password: hashpassword
     });
@@ -31,7 +31,7 @@ router.post('/adminlogin', async (req, res) => {
         return res.status(401).json({ error: "Admin is not registered" });
     }
 
-    const validPassword = await bcrypt.compare(password, admin.password);
+    const validPassword = await bcryptjs.compare(password, admin.password);
     if (!validPassword) {
         return res.status(401).json({ error: "Password is incorrect" });
     }

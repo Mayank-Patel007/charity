@@ -1,5 +1,5 @@
 import express from "express";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 const router = express.Router();
 import { Donor } from "../models/Donor.js";
 import { Donation } from "../models/Donation.js"
@@ -13,7 +13,7 @@ router.post('/donorsignup', async (req, res) => {
     if (donor) {
       return res.json({ message: 'donor already exists' });
     }
-    const hashpassword = await bcrypt.hash(password, 10);
+    const hashpassword = await bcryptjs.hash(password, 10);
     const newDonor = await Donor.create({
       firstName, lastName, contactNo, email,username, address, city, pincode, password: hashpassword
     });
@@ -31,7 +31,7 @@ router.post('/donorlogin', async (req, res) => {
     if (!donor) {
       return res.status(401).json({ error: "Donor is not registered" });
     }
-    const validPassword = await bcrypt.compare(password, donor.password);
+    const validPassword = await bcryptjs.compare(password, donor.password);
     if (!validPassword) {
       return res.status(401).json({ error: "Password is incorrect" });
     }
